@@ -1,4 +1,4 @@
-name: C++ core
+name: C++
 
 on:
   push:
@@ -7,16 +7,40 @@ on:
     paths: ["cpp/**", "data/**", "efx.json", ".github/workflows/cpp.yml"]
 
 jobs:
-  test:
+  core-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release -DSC88_BUILD_APP=OFF
+      - name: Build
+        run: cmake --build cpp/build --parallel
+      - name: Test
+        run: ctest --test-dir cpp/build --output-on-failure
+
+  app:
     strategy:
+      fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure
         run: cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
-        run: cmake --build cpp/build --parallel
+        run: cmake --build cpp/build --config Release --parallel
       - name: Test
-        run: ctest --test-dir cpp/build --output-on-failure
+        run: ctest --test-dir cpp/build -C Release --output-on-failure
+      - name: Upload app (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SC88-Flashlight-macOS
+          path: cpp/build/app/SC88Flashlight_artefacts/Release/
+      - name: Upload app (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SC88-Flashlight-Windows
+          path: cpp/build/app/SC88Flashlight_artefacts/Release/*.exe

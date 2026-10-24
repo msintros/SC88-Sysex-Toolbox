@@ -1,0 +1,22 @@
+name: C++ core
+
+on:
+  push:
+    paths: ["cpp/**", "data/**", "efx.json", ".github/workflows/cpp.yml"]
+  pull_request:
+    paths: ["cpp/**", "data/**", "efx.json", ".github/workflows/cpp.yml"]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build cpp/build --parallel
+      - name: Test
+        run: ctest --test-dir cpp/build --output-on-failure

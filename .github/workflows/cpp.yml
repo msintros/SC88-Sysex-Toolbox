@@ -36,11 +36,11 @@ jobs:
         if: runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
-          name: SC88-Flashlight-macOS
-          path: cpp/build/app/SC88Flashlight_artefacts/Release/
+          name: SC88-Sysex-Toolbox-macOS
+          path: cpp/build/app/SC88SysexToolbox_artefacts/Release/
       - name: Upload app (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: SC88-Flashlight-Windows
-          path: cpp/build/app/SC88Flashlight_artefacts/Release/*.exe
+          name: SC88-Sysex-Toolbox-Windows
+          path: cpp/build/app/SC88SysexToolbox_artefacts/Release/*.exe

@@ -14,6 +14,8 @@ struct Message {
     Bytes bytes;
 };
 
+enum class ResetKind { GsReset, GmSystemOn };
+
 // The editor's complete state: every value the user can set, and the
 // messages that reproduce it on the SC-88 Pro.
 class Patch {
@@ -21,6 +23,13 @@ public:
     explicit Patch(const Tables& tables);
 
     const Tables& tables() const { return t; }
+
+    // Puts every value where the SC-88 Pro puts it on receiving the reset, per
+    // the owner's manual parameter map: factory defaults, EFX type Thru, and
+    // Rx NRPN / Rx Bank Select on for GS Reset and off for GM System On.
+    // System parameters (mode, block ports) and Tone Map-0 Number are not
+    // affected by either reset, so they are left alone.
+    void reset(ResetKind kind);
 
     // System-wide parameter pages (Reverb, Chorus, Delay, EQ, Global).
     int pageValue(int page, int param) const;
@@ -77,8 +86,10 @@ private:
     std::array<std::array<bool, 16>, 2> efxOn {};
     int mode = 0;
     std::array<int, 32> blockPorts {};
-    int efxTypeIndex = 1;
+    int efxTypeIndex = 0; // Thru, the power-on and reset default
     std::array<int, 20> efxParams {};
+
+    void resetPartsAndEffects();
 
     static size_t gi(Group g) { return g == Group::A ? 0 : 1; }
     static size_t pi(int partNumber) { return static_cast<size_t>(partNumber - 1); }

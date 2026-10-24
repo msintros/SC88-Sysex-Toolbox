@@ -6,29 +6,33 @@ static juce::File defaultSaveLocation()
 {
     return juce::File::getSpecialLocation(juce::File::userHomeDirectory)
         .getChildFile("Downloads")
-        .getChildFile("SC88 Flashlight MIDI");
+        .getChildFile("SC88 Sysex Toolbox MIDI");
 }
 
-juce::File Settings::settingsFile()
+juce::File Settings::settingsFileFor(const juce::String& appFolder)
 {
 #if JUCE_MAC
     auto dir = juce::File::getSpecialLocation(juce::File::userHomeDirectory)
-                   .getChildFile("Library/Application Support/SC88 Flashlight");
+                   .getChildFile("Library/Application Support").getChildFile(appFolder);
 #elif JUCE_WINDOWS
-    auto dir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                   .getChildFile("SC88 Flashlight");
+    auto dir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile(appFolder);
 #else
-    auto dir = juce::File::getSpecialLocation(juce::File::userHomeDirectory).getChildFile(".sc88_flashlight");
+    auto dir = juce::File::getSpecialLocation(juce::File::userHomeDirectory)
+                   .getChildFile("." + appFolder.toLowerCase().replaceCharacter(' ', '_'));
 #endif
     return dir.getChildFile("settings.json");
 }
+
+juce::File Settings::settingsFile() { return settingsFileFor("SC88 Sysex Toolbox"); }
 
 Settings Settings::load()
 {
     Settings s;
     s.midiSaveLocation = defaultSaveLocation();
 
-    auto json = juce::JSON::parse(settingsFile());
+    auto file = settingsFile();
+    if (!file.existsAsFile()) file = settingsFileFor("SC88 Flashlight"); // the Python app's settings
+    auto json = juce::JSON::parse(file);
     if (auto* obj = json.getDynamicObject()) {
         auto output = obj->getProperty("midi_output");
         if (output.isString()) s.midiOutput = output.toString();

@@ -120,9 +120,11 @@ void MainComponent::updateLcd()
 {
     auto status = state.status();
     auto out = state.midi.currentOutputName();
-    juce::String param = state.lastEditedName.isNotEmpty()
-        ? state.lastEditedName.substring(0, 16).paddedRight(' ', 17) + state.lastEditedValue
-        : juce::String();
+    // Name on the left, value right-aligned; the name gives way to a long value.
+    constexpr int columns = 28;
+    auto value = state.lastEditedValue.substring(0, columns - 4);
+    auto name = state.lastEditedName.substring(0, juce::jmax(0, columns - value.length() - 1));
+    juce::String param = name.isNotEmpty() ? name.paddedRight(' ', columns - value.length()) + value : juce::String();
     lcd.setLines({ page ? page->exportLabel() : juce::String(), param, "",
                    status.isNotEmpty() ? status : "MIDI " + (out.isEmpty() ? juce::String("- no output") : out) });
 }
@@ -172,7 +174,7 @@ void MainComponent::paint(juce::Graphics& g)
     Draw::label(g, { lcdR.getX() + 4, 14, 200, 18 }, "SC-88 PRO", juce::Justification::centredLeft, 12.5f);
     g.setColour(Theme::label);
     g.setFont(Theme::boldFont(17.0f).withExtraKerningFactor(0.02f));
-    g.drawText("Flashlight", juce::Rectangle<float>(lcdR.getRight() - 220, 10, 220, 24), juce::Justification::centredRight);
+    g.drawText("Sysex Toolbox", juce::Rectangle<float>(lcdR.getRight() - 220, 10, 220, 24), juce::Justification::centredRight);
 
     // Round button labels to the left of each button.
     const char* labels[] = { "SEND", "COPY", "PAGE MIDI", "PARAM MIDI" };

@@ -1,10 +1,10 @@
-# SC88 Flashlight, C++ edition
+# SC88 Sysex Toolbox
 
-A C++ rewrite of the Python/Pygame app in the repository root: a JUCE desktop app
+A C++ rewrite of SC88 Flashlight, the Python/Pygame app in the repository root: a JUCE desktop app
 styled after the 88emu front panel, on top of `sc88-core`, a UI-free library that
 holds all of the SC-88 Pro knowledge.
 
-![EFX Type page](../docs/screenshots/efx_type.png)
+![Basic page](../docs/screenshots/basic.png)
 
 ## Building
 
@@ -16,7 +16,7 @@ downloaded automatically the first time you configure.
 ```sh
 cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release
 cmake --build cpp/build --parallel
-open "cpp/build/app/SC88Flashlight_artefacts/Release/SC88 Flashlight.app"
+open "cpp/build/app/SC88SysexToolbox_artefacts/Release/SC88 Sysex Toolbox.app"
 ```
 
 **Windows** (Visual Studio 2022 with "Desktop development with C++", from a
@@ -25,7 +25,7 @@ Developer PowerShell):
 ```powershell
 cmake -S cpp -B cpp/build
 cmake --build cpp/build --config Release --parallel
-& "cpp/build/app/SC88Flashlight_artefacts/Release/SC88 Flashlight.exe"
+& "cpp/build/app/SC88SysexToolbox_artefacts/Release/SC88 Sysex Toolbox.exe"
 ```
 
 **Linux**: install JUCE's dependencies first (on Debian/Ubuntu: `libasound2-dev
@@ -47,10 +47,14 @@ downloadable artifacts.
   .mid file straight into Finder or a DAW.
 - Click the effect name on EFX Type to pick from all 65 effects.
 - The window resizes freely and keeps the panel's proportions.
-- Settings (MIDI output, save folder, SysEx delay, repeat speed) are shared with the
-  Python version.
+- RESET sends GS Reset or GM System On and returns every page to the values the
+  SC-88 Pro resets to (from the owner's manual parameter map).
+- Settings (MIDI output, save folder, SysEx delay, repeat speed) are stored in the
+  same format as the Python app; on first run the app picks up the Python app's
+  settings.
+- The app icon is drawn by `tools/make_icon.py`.
 
-`"SC88 Flashlight" --screenshots <folder>` renders every page to PNG files without
+`"SC88 Sysex Toolbox" --screenshots <folder>` renders every page to PNG files without
 opening a window, which is handy for checking layout changes.
 
 ## App source (`app/source`)

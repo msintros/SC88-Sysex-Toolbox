@@ -15,27 +15,67 @@ std::string groupPartLabel(Group g, int partNumber)
 
 Patch::Patch(const Tables& tables) : t(tables)
 {
-    for (const auto& page : t.pages) {
-        std::vector<int> values;
-        for (const auto& p : page.params) values.push_back(p.defaultValue);
-        pageValues.push_back(std::move(values));
-    }
+    for (const auto& page : t.pages) pageValues.emplace_back(page.params.size());
+    for (auto& group : partValues)
+        for (auto& cats : group) {
+            cats.resize(t.partCategories.size());
+            for (size_t c = 0; c < t.partCategories.size(); ++c) cats[c].resize(t.partCategories[c].params.size());
+        }
+
+    resetPartsAndEffects();
+    for (size_t b = 16; b < 32; ++b) blockPorts[b] = 1;
+}
+
+void Patch::resetPartsAndEffects()
+{
+    for (size_t p = 0; p < t.pages.size(); ++p)
+        for (size_t i = 0; i < t.pages[p].params.size(); ++i) pageValues[p][i] = t.pages[p].params[i].defaultValue;
 
     for (auto& group : partValues)
-        for (int part = 1; part <= 16; ++part) {
-            auto& cats = group[pi(part)];
-            cats.resize(t.partCategories.size());
+        for (int part = 1; part <= 16; ++part)
             for (size_t c = 0; c < t.partCategories.size(); ++c)
                 for (size_t i = 0; i < t.partCategories[c].params.size(); ++i)
-                    cats[c].push_back(t.partDefault(int(c), int(i), part));
-        }
+                    group[pi(part)][c][i] = t.partDefault(int(c), int(i), part);
 
     for (auto& group : scaleValues)
         for (auto& part : group) part.fill(0x40);
 
-    for (size_t b = 16; b < 32; ++b) blockPorts[b] = 1;
+    for (auto& group : efxOn) group.fill(false);
 
-    if (efxTypeIndex < int(t.efxTypes.size())) setEfxType(efxTypeIndex);
+    if (efxTypeIndex >= 0 && efxTypeIndex < int(t.efxTypes.size())) setEfxType(efxTypeIndex);
+}
+
+void Patch::reset(ResetKind kind)
+{
+    // Tone Map-0 Number survives resets; remember it per part.
+    auto findParam = [this](const char* name, int& cat, int& index) {
+        cat = index = -1;
+        for (size_t c = 0; c < t.partCategories.size(); ++c)
+            for (size_t i = 0; i < t.partCategories[c].params.size(); ++i)
+                if (t.partCategories[c].params[i].name == name) { cat = int(c); index = int(i); }
+    };
+    int mapCat, mapIndex;
+    findParam("Tone Map-0 Number", mapCat, mapIndex);
+    std::array<std::array<int, 16>, 2> toneMap0 {};
+    if (mapCat >= 0)
+        for (size_t g = 0; g < 2; ++g)
+            for (size_t p = 0; p < 16; ++p) toneMap0[g][p] = partValues[g][p][size_t(mapCat)][size_t(mapIndex)];
+
+    efxTypeIndex = 0;
+    resetPartsAndEffects();
+
+    const int rxOn = kind == ResetKind::GsReset ? 1 : 0;
+    for (const char* name : { "Rx NRPN", "Rx Bank Select" }) {
+        int cat, index;
+        findParam(name, cat, index);
+        if (cat < 0) continue;
+        for (auto& group : partValues)
+            for (auto& part : group) part[size_t(cat)][size_t(index)] = rxOn;
+    }
+
+    if (mapCat >= 0)
+        for (size_t g = 0; g < 2; ++g)
+            for (size_t p = 0; p < 16; ++p) partValues[g][p][size_t(mapCat)][size_t(mapIndex)] = toneMap0[g][p];
 }
 
 // ---- System-wide pages ----------------------------------------------------

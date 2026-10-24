@@ -13,7 +13,7 @@ static juce::String safeName(const juce::String& text)
     auto parts = juce::StringArray::fromTokens(cleaned, " ", "");
     parts.removeEmptyStrings();
     auto joined = parts.joinIntoString(" ");
-    return joined.isEmpty() ? juce::String("SC88 Flashlight") : joined;
+    return joined.isEmpty() ? juce::String("SC88 Sysex Toolbox") : joined;
 }
 
 juce::String fileName(const juce::String& label, const juce::String& scope, bool withMillis)
@@ -32,7 +32,7 @@ bool writeMidiFile(const juce::File& file, const juce::String& label, const juce
     const double gapTicks = std::round(delayMs / 1000.0 / secondsPerTick);
 
     juce::MidiMessageSequence track;
-    auto name = juce::MidiMessage::textMetaEvent(3, "SC88 Flashlight " + scope + ": " + label);
+    auto name = juce::MidiMessage::textMetaEvent(3, "SC88 Sysex Toolbox " + scope + ": " + label);
     name.setTimeStamp(0);
     track.addEvent(name);
     auto tempo = juce::MidiMessage::tempoMetaEvent(500000);
@@ -64,9 +64,9 @@ juce::File dragCacheDirectory()
 {
 #if JUCE_MAC
     return juce::File::getSpecialLocation(juce::File::userHomeDirectory)
-        .getChildFile("Library/Caches/SC88 Flashlight/Drag MIDI");
+        .getChildFile("Library/Caches/SC88 Sysex Toolbox/Drag MIDI");
 #else
-    return juce::File::getSpecialLocation(juce::File::tempDirectory).getChildFile("SC88 Flashlight Drag MIDI");
+    return juce::File::getSpecialLocation(juce::File::tempDirectory).getChildFile("SC88 Sysex Toolbox Drag MIDI");
 #endif
 }
 

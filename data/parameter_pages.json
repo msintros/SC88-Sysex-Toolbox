@@ -1,0 +1,470 @@
+{
+  "pages": [
+    {
+      "id": "reverb",
+      "title": "Reverb Settings",
+      "params": [
+        {
+          "name": "Macro",
+          "address": [
+            64,
+            1,
+            48
+          ],
+          "default": 4,
+          "enum": [
+            "Room 1",
+            "Room 2",
+            "Room 3",
+            "Hall 1",
+            "Hall 2",
+            "Plate",
+            "Delay",
+            "Panning Delay"
+          ],
+          "raw_min": 0,
+          "raw_max": 7
+        },
+        {
+          "name": "Character",
+          "address": [
+            64,
+            1,
+            49
+          ],
+          "default": 4,
+          "raw_min": 0,
+          "raw_max": 7
+        },
+        {
+          "name": "Pre-LPF",
+          "address": [
+            64,
+            1,
+            50
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 7
+        },
+        {
+          "name": "Level",
+          "address": [
+            64,
+            1,
+            51
+          ],
+          "default": 64,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Time",
+          "address": [
+            64,
+            1,
+            52
+          ],
+          "default": 64,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Delay FB",
+          "address": [
+            64,
+            1,
+            53
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Predelay",
+          "address": [
+            64,
+            1,
+            55
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127,
+          "suffix": " ms"
+        }
+      ]
+    },
+    {
+      "id": "chorus",
+      "title": "Chorus Settings",
+      "params": [
+        {
+          "name": "Macro",
+          "address": [
+            64,
+            1,
+            56
+          ],
+          "default": 2,
+          "enum": [
+            "Chorus 1",
+            "Chorus 2",
+            "Chorus 3",
+            "Chorus 4",
+            "Feedback Chorus",
+            "Flanger",
+            "Short Delay",
+            "Short Delay (FB)"
+          ],
+          "raw_min": 0,
+          "raw_max": 7
+        },
+        {
+          "name": "Pre-LPF",
+          "address": [
+            64,
+            1,
+            57
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 7
+        },
+        {
+          "name": "Level",
+          "address": [
+            64,
+            1,
+            58
+          ],
+          "default": 64,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Feedback",
+          "address": [
+            64,
+            1,
+            59
+          ],
+          "default": 8,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Delay",
+          "address": [
+            64,
+            1,
+            60
+          ],
+          "default": 80,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Rate",
+          "address": [
+            64,
+            1,
+            61
+          ],
+          "default": 3,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Depth",
+          "address": [
+            64,
+            1,
+            62
+          ],
+          "default": 19,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Send -> Reverb",
+          "address": [
+            64,
+            1,
+            63
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Send -> Delay",
+          "address": [
+            64,
+            1,
+            64
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127
+        }
+      ]
+    },
+    {
+      "id": "delay",
+      "title": "Delay Settings",
+      "params": [
+        {
+          "name": "Macro",
+          "address": [
+            64,
+            1,
+            80
+          ],
+          "default": 0,
+          "enum": [
+            "Delay 1",
+            "Delay 2",
+            "Delay 3",
+            "Delay 4",
+            "Pan Delay 1",
+            "Pan Delay 2",
+            "Pan Delay 3",
+            "Pan Delay 4",
+            "Delay to Reverb",
+            "Pan Repeat"
+          ],
+          "raw_min": 0,
+          "raw_max": 9
+        },
+        {
+          "name": "Pre-LPF",
+          "address": [
+            64,
+            1,
+            81
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 7
+        },
+        {
+          "name": "Time Center",
+          "address": [
+            64,
+            1,
+            82
+          ],
+          "default": 97,
+          "raw_min": 1,
+          "raw_max": 115,
+          "display_codec": "delay_time_center"
+        },
+        {
+          "name": "Time Ratio L",
+          "address": [
+            64,
+            1,
+            83
+          ],
+          "default": 1,
+          "raw_min": 1,
+          "raw_max": 120,
+          "display_codec": "delay_ratio"
+        },
+        {
+          "name": "Time Ratio R",
+          "address": [
+            64,
+            1,
+            84
+          ],
+          "default": 1,
+          "raw_min": 1,
+          "raw_max": 120,
+          "display_codec": "delay_ratio"
+        },
+        {
+          "name": "Level Center",
+          "address": [
+            64,
+            1,
+            85
+          ],
+          "default": 127,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Level Left",
+          "address": [
+            64,
+            1,
+            86
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Level Right",
+          "address": [
+            64,
+            1,
+            87
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Level",
+          "address": [
+            64,
+            1,
+            88
+          ],
+          "default": 64,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Feedback",
+          "address": [
+            64,
+            1,
+            89
+          ],
+          "default": 80,
+          "raw_min": 0,
+          "raw_max": 127,
+          "display_codec": "signed_64"
+        },
+        {
+          "name": "Send -> Reverb",
+          "address": [
+            64,
+            1,
+            90
+          ],
+          "default": 0,
+          "raw_min": 0,
+          "raw_max": 127
+        }
+      ]
+    },
+    {
+      "id": "eq",
+      "title": "EQ Settings",
+      "params": [
+        {
+          "name": "Low Freq",
+          "address": [
+            64,
+            2,
+            0
+          ],
+          "default": 0,
+          "enum": [
+            "200 Hz",
+            "400 Hz"
+          ],
+          "raw_min": 0,
+          "raw_max": 1
+        },
+        {
+          "name": "Low Gain",
+          "address": [
+            64,
+            2,
+            1
+          ],
+          "default": 64,
+          "raw_min": 52,
+          "raw_max": 76,
+          "display_codec": "gain_db"
+        },
+        {
+          "name": "High Freq",
+          "address": [
+            64,
+            2,
+            2
+          ],
+          "default": 0,
+          "enum": [
+            "3 kHz",
+            "6 kHz"
+          ],
+          "raw_min": 0,
+          "raw_max": 1
+        },
+        {
+          "name": "High Gain",
+          "address": [
+            64,
+            2,
+            3
+          ],
+          "default": 64,
+          "raw_min": 52,
+          "raw_max": 76,
+          "display_codec": "gain_db"
+        }
+      ]
+    },
+    {
+      "id": "global",
+      "title": "Adjust Global Values",
+      "params": [
+        {
+          "name": "Master Tune",
+          "address": [
+            64,
+            0,
+            0
+          ],
+          "default": 1024,
+          "raw_min": 24,
+          "raw_max": 2024,
+          "display_codec": "master_tune",
+          "data_codec": "nibbles4"
+        },
+        {
+          "name": "Master Level",
+          "address": [
+            64,
+            0,
+            4
+          ],
+          "default": 127,
+          "raw_min": 0,
+          "raw_max": 127
+        },
+        {
+          "name": "Master Key Shift",
+          "address": [
+            64,
+            0,
+            5
+          ],
+          "default": 64,
+          "raw_min": 40,
+          "raw_max": 88,
+          "display_codec": "key_shift"
+        },
+        {
+          "name": "Master Pan",
+          "address": [
+            64,
+            0,
+            6
+          ],
+          "default": 64,
+          "raw_min": 1,
+          "raw_max": 127,
+          "display_codec": "master_pan"
+        }
+      ]
+    }
+  ]
+}

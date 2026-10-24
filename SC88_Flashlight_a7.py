@@ -1239,7 +1239,8 @@ def _controller_group(prefix, base, bend=False):
         _pp(f"{prefix} TVF Cutoff", "2", base + 0x01, 0x40, 0, 127, codec="signed_64"),
         _pp(f"{prefix} Amplitude", "2", base + 0x02, 0x40, 0, 127, codec="signed_64"),
         _pp(f"{prefix} LFO1 Rate", "2", base + 0x03, 0x40, 0, 127, codec="signed_64"),
-        _pp(f"{prefix} LFO1 Pitch", "2", base + 0x04, 0, 0, 127),
+        # Mod is the only controller with a non-zero factory LFO1 pitch depth (0AH).
+        _pp(f"{prefix} LFO1 Pitch", "2", base + 0x04, 0x0A if prefix == "Mod" else 0, 0, 127),
         _pp(f"{prefix} LFO1 TVF", "2", base + 0x05, 0, 0, 127),
         _pp(f"{prefix} LFO1 TVA", "2", base + 0x06, 0, 0, 127),
         _pp(f"{prefix} LFO2 Rate", "2", base + 0x07, 0x40, 0, 127, codec="signed_64"),

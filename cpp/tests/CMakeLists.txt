@@ -6,7 +6,8 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(sc88-core-tests
     test_sysex.cpp
-    test_golden.cpp)
+    test_golden.cpp
+    test_patch.cpp)
 
 target_link_libraries(sc88-core-tests PRIVATE sc88-core nlohmann_json::nlohmann_json Catch2::Catch2WithMain)
 target_compile_definitions(sc88-core-tests PRIVATE

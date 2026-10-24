@@ -11,7 +11,7 @@ namespace sc88 {
 namespace Exporter {
 
 // Type 0 SMF at 120 BPM / 480 PPQN, messages spaced by delayMs, with a track
-// name of "SC88 Flashlight <scope>: <label>". Matches the Python app's files.
+// name of "SC88 Sysex Toolbox <scope>: <label>". Same layout as the Python app's files.
 bool writeMidiFile(const juce::File& file, const juce::String& label, const juce::String& scope,
                    const std::vector<Message>& messages, int delayMs);
 

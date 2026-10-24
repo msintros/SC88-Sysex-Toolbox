@@ -235,7 +235,7 @@ std::unique_ptr<Page> makeAftertouchPage(AppState& s)
     type.name = [] { return juce::String("Type"); };
     type.display = [&s] { return juce::String(s.aftertouchPoly ? "Polyphonic" : "Channel"); };
     type.step = [&s](int) { s.aftertouchPoly = !s.aftertouchPoly; s.clearLastEdited(); };
-    page->addHeaderCell(std::move(type), 230);
+    page->addHeaderCell(std::move(type), 290);
     page->addParams();
     return page;
 }
@@ -405,7 +405,7 @@ public:
         Page::paint(g);
         auto body = bodyArea().withTrimmedTop(70);
         Draw::label(g, body.removeFromTop(20).toFloat(),
-                    "Sends a reset to the SC-88 Pro. GS Reset restores GS defaults; GM System On switches to GM mode.",
+                    "Sends a reset to the SC-88 Pro and returns every page here to the values the unit resets to.",
                     juce::Justification::centred, 12.0f);
     }
 
@@ -427,8 +427,10 @@ private:
         state.lastEditedName = exportLabel();
         state.lastEditedValue = {};
         auto chosen = pageMessages();
+        // Mirror what the SC-88 Pro does on receiving the reset.
+        state.patch.reset(gsReset ? ResetKind::GsReset : ResetKind::GmSystemOn);
         state.parameterEdited({ exportLabel(), [chosen] { return chosen; } });
-        state.setStatus("Sent " + exportLabel());
+        state.setStatus("Sent " + exportLabel() + ", editor reset");
     }
 };
 
@@ -491,8 +493,7 @@ public:
         g.setColour(Theme::labelDim);
         g.setFont(Theme::labelFont(11.5f));
         g.drawFittedText("SysEx delay spaces the messages of SEND and the MIDI files. A lower repeat interval "
-                         "makes held arrow keys step faster (applies after switching pages). Settings are shared "
-                         "with the Python version.",
+                         "makes held arrow keys step faster (applies after switching pages).",
                          note.toNearestInt(), juce::Justification::topLeft, 3);
     }
 

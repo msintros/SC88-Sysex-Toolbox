@@ -11,7 +11,16 @@ holds all of the SC-88 Pro knowledge.
 You need CMake 3.22+ and a C++20 compiler. JUCE, nlohmann/json and Catch2 are
 downloaded automatically the first time you configure.
 
-**macOS** (Xcode or the Command Line Tools):
+**macOS** (Xcode or the Command Line Tools, plus CMake): from the repository root,
+
+```sh
+./build_universal.sh install
+```
+
+builds a universal app (Apple Silicon and Intel), runs the tests and copies
+`SC88 Sysex Toolbox.app` to /Applications. Leave off `install` to only build it (into
+`cpp/build-universal`), or pass `clean` to remove the build folder. To build by hand
+for your Mac's architecture only:
 
 ```sh
 cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release

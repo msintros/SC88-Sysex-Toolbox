@@ -2,9 +2,9 @@ name: C++
 
 on:
   push:
-    paths: ["cpp/**", "data/**", "efx.json", ".github/workflows/cpp.yml"]
+    paths: ["cpp/**", "data/**", "efx.json", "build_universal.sh", ".github/workflows/cpp.yml"]
   pull_request:
-    paths: ["cpp/**", "data/**", "efx.json", ".github/workflows/cpp.yml"]
+    paths: ["cpp/**", "data/**", "efx.json", "build_universal.sh", ".github/workflows/cpp.yml"]
 
 jobs:
   core-tests:
@@ -26,18 +26,24 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - name: Build universal app (macOS)
+        if: runner.os == 'macOS'
+        run: ./build_universal.sh
       - name: Configure
+        if: runner.os == 'Windows'
         run: cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
+        if: runner.os == 'Windows'
         run: cmake --build cpp/build --config Release --parallel
       - name: Test
+        if: runner.os == 'Windows'
         run: ctest --test-dir cpp/build -C Release --output-on-failure
       - name: Upload app (macOS)
         if: runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
           name: SC88-Sysex-Toolbox-macOS
-          path: cpp/build/app/SC88SysexToolbox_artefacts/Release/
+          path: cpp/build-universal/app/SC88SysexToolbox_artefacts/Release/
       - name: Upload app (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4

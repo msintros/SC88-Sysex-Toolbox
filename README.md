@@ -1,17 +1,24 @@
-# SC-88 Pro EFX data refactor — v2.1
+<img width="600" height="283" alt="Screenshot 2026-10-25 at 7 48 06 PM" src="https://github.com/user-attachments/assets/fba0478e-196b-4717-b4db-bcdfc2e613a1" />
 
-Fixes a page-boundary parsing bug discovered while testing GTR Multi 2.
 
-The PDF text extraction split a few effect definitions across pages. The first v2 parser
-mistakenly treated the continuation rows as detached from the active effect. Four effects
-were affected:
 
-- 24: 4 Tap Delay
-- 49: GTR Multi 2
-- 55: Keyboard Multi
-- 59: OD1 / OD2
 
-Their continuation parameters have now been restored from the manual.
+# SC88 Sysex Toolbox
 
-Parameters whose factory default is not unambiguously represented in extracted text remain
-marked `default_from_manual: false`; no unsupported default has been invented.
+Original Python code on which this project was based:
+
+           Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+
+Original Python project completed by Michael Sintros 2026 using ChatGPT.
+
+Re-written in C++ using Claude to facilitate ease of building on other platforms (Python drag-and-drop functionality relied on PyObjC).
+
+
+# Features
+
+Generates automatically generated Sysex messages based on parameter edits.  
+
+Sysex strings can be sent directly to the hardware unit or to TUS 88Emu.  
+
+Sysex can also be dragged and dropped directly into your DAW to use as real-time changes in a MIDI arrangement.  
+

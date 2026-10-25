@@ -5,9 +5,11 @@
 
 # SC88 Sysex Toolbox
 
-Original Python code on which this project was based:
+Original work-in-progress Python code on which this project was based:
 
            Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+           
+https://github.com/FlashlightET/SC-88-Pro-Toolkit
 
 Original Python project completed by Michael Sintros 2026 using ChatGPT.
 

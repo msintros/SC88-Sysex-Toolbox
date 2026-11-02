@@ -8,6 +8,11 @@ holds all of the SC-88 Pro knowledge.
 
 ![Programs page with the group menu open](../docs/screenshots/programs_menu.png)
 
+## Version
+
+The current version is **1.0.0**. It is set in `cpp/CMakeLists.txt` and changes are
+listed in [CHANGELOG.md](CHANGELOG.md).
+
 ## Building
 
 You need CMake 3.22+ and a C++20 compiler. JUCE, nlohmann/json and Catch2 are

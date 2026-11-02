@@ -1,5 +1,5 @@
-// Checks the C++ core against vectors generated from the Python app by
-// tools/make_golden.py: every display string and SysEx byte must match.
+// Checks the C++ core against vectors generated from the original Python app
+// (since removed): every display string and SysEx byte must match.
 
 #include "sc88/Patch.h"
 

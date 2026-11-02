@@ -41,7 +41,8 @@ private:
     struct PageEntry {
         juce::String key;
         juce::String group;
-        std::function<std::unique_ptr<ui::Page>()> make;
+        std::function<std::unique_ptr<ui::Page>()> make; // a page key
+        std::function<void()> action;                     // or a one-shot key (SAVE / LOAD)
         std::unique_ptr<ui::PageKey> button;
     };
 
@@ -50,6 +51,7 @@ private:
     ui::RoundButton sendButton, copyButton;
     ExportButton pageMidiButton, paramMidiButton;
     std::vector<PageEntry> entries;
+    std::unique_ptr<juce::FileChooser> chooser;
     std::unique_ptr<ui::Page> page;
     int currentPage = -1;
 
@@ -59,6 +61,8 @@ private:
     void timerCallback() override;
 
     void savePage(), saveParameter();
+    void savePrograms(), loadPrograms();
+    void showPage(const juce::String& key);
     void save(const juce::String& label, const juce::String& scope, const std::vector<Message>&);
 
     juce::Rectangle<int> lcdArea() const { return { 24, 38, 540, 118 }; }

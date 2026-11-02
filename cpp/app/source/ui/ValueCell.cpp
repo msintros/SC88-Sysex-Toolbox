@@ -65,7 +65,12 @@ void ValueCell::resized()
     }
     value.setBounds(row);
     // Size the dots so the value LCD shows about 7 dot rows of text.
-    value.setDotPitch(juce::jlimit(1.6f, 2.4f, float(row.getHeight()) / 11.0f));
+    float pitch = juce::jlimit(1.6f, 2.4f, float(row.getHeight()) / 11.0f);
+    // The LCD's padding is 1.6 dot steps plus ~6% of its height on each side.
+    if (minimumCharacters > 0)
+        pitch = juce::jmin(pitch, (float(row.getWidth()) - 2.0f * juce::jmax(1.5f, row.getHeight() * 0.06f) - 0.5f)
+                                      / (float(minimumCharacters) * 6.0f + 2.2f));
+    value.setDotPitch(pitch);
 }
 
 void ValueCell::mouseDown(const juce::MouseEvent&) { dragStarted = false; }

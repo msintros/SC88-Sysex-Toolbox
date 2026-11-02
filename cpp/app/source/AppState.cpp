@@ -10,7 +10,8 @@ AppState::AppState()
                               binaryText(BinaryData::part_params_json, BinaryData::part_params_jsonSize),
                               binaryText(BinaryData::efx_json, BinaryData::efx_jsonSize))),
       patch(tables),
-      settings(Settings::load())
+      settings(Settings::load()),
+      programList(ProgramList::fromJson(juce::String::fromUTF8(BinaryData::programs_json, BinaryData::programs_jsonSize)))
 {
     midi.openPreferred(settings.midiOutput);
     midi.onDevicesChanged = [this] { sendChangeMessage(); };

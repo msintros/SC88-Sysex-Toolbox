@@ -47,5 +47,6 @@ std::unique_ptr<Page> makeSystemPage(AppState&);
 std::unique_ptr<Page> makeEfxTypePage(AppState&);
 std::unique_ptr<Page> makeResetPage(AppState&);
 std::unique_ptr<Page> makeSettingsPage(AppState&);
+std::unique_ptr<Page> makeProgramsPage(AppState&);
 
 } // namespace sc88::ui

@@ -32,7 +32,8 @@ void ExportButton::clicked()
 
 namespace {
 constexpr int topPanelHeight = 238;
-const juce::Rectangle<int> keyBlock { 600, 20, 500, 200 };
+const juce::Rectangle<int> keyBlock { 600, 12, 500, 216 };
+constexpr int keyRowPitch = 44, keyHeight = 39; // five rows of page keys
 const juce::Rectangle<int> pageArea { 24, 256, 1072, 450 };
 constexpr int keyColumns = 6;
 
@@ -67,7 +68,7 @@ MainComponent::MainComponent(AppState& s) : state(s)
     };
 
     auto add = [this](juce::String key, juce::String group, std::function<std::unique_ptr<Page>()> make) {
-        entries.push_back({ key, group, std::move(make), std::make_unique<PageKey>(key) });
+        entries.push_back({ key, group, std::move(make), {}, std::make_unique<PageKey>(key) });
     };
     add("EFX TYPE", "EFFECTS", [&s] { return makeEfxTypePage(s); });
     add("EFX ASSIGN", "EFFECTS", [&s] { return makeEfxAssignPage(s); });
@@ -89,10 +90,19 @@ MainComponent::MainComponent(AppState& s) : state(s)
     add("SYSTEM", "SYSTEM", [&s] { return makeSystemPage(s); });
     add("RESET", "SYSTEM", [&s] { return makeResetPage(s); });
     add("SETTINGS", "SYSTEM", [&s] { return makeSettingsPage(s); });
+    add("CONFIG", "PROGRAMS", [&s] { return makeProgramsPage(s); });
+    auto addAction = [this](juce::String key, juce::String group, std::function<void()> action) {
+        entries.push_back({ key, group, {}, std::move(action), std::make_unique<PageKey>(key) });
+    };
+    addAction("SAVE", "PROGRAMS", [this] { savePrograms(); });
+    addAction("LOAD", "PROGRAMS", [this] { loadPrograms(); });
 
     for (size_t i = 0; i < entries.size(); ++i) {
         addAndMakeVisible(*entries[i].button);
-        entries[i].button->onClick = [this, i] { showPage(int(i)); };
+        if (entries[i].action)
+            entries[i].button->onClick = entries[i].action;
+        else
+            entries[i].button->onClick = [this, i] { showPage(int(i)); };
     }
 
     state.addChangeListener(this);
@@ -114,6 +124,12 @@ void MainComponent::showPage(int index)
     page->setBounds(pageArea);
     page->refresh();
     updateLcd();
+}
+
+void MainComponent::showPage(const juce::String& key)
+{
+    for (size_t i = 0; i < entries.size(); ++i)
+        if (entries[i].key == key && entries[i].make) showPage(int(i));
 }
 
 void MainComponent::updateLcd()
@@ -159,6 +175,55 @@ void MainComponent::saveParameter()
 {
     auto& p = state.lastEditedParameter();
     save(p.label, "Parameter", p ? p.messages() : std::vector<Message> {});
+}
+
+// ---- Program setups ----------------------------------------------------------------
+
+namespace {
+const juce::String programFilePattern = "*.json";
+}
+
+void MainComponent::savePrograms()
+{
+    showPage("CONFIG");
+    auto start = state.settings.midiSaveLocation.getChildFile("SC88 Programs.json");
+    chooser = std::make_unique<juce::FileChooser>("Save the program setup", start, programFilePattern);
+    chooser->launchAsync(juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles
+                             | juce::FileBrowserComponent::warnAboutOverwriting,
+                         [this](const juce::FileChooser& fc) {
+                             auto file = fc.getResult();
+                             if (file == juce::File()) return;
+                             if (!file.hasFileExtension("json")) file = file.withFileExtension("json");
+                             auto json = juce::JSON::toString(state.programs.toVar(file.getFileNameWithoutExtension()));
+                             if (file.replaceWithText(json + "\n"))
+                                 state.setStatus("Saved " + file.getFileName(), 3000);
+                             else
+                                 state.setStatus("Could not save " + file.getFileName(), 3000);
+                         });
+}
+
+void MainComponent::loadPrograms()
+{
+    showPage("CONFIG");
+    chooser = std::make_unique<juce::FileChooser>("Load a program setup", state.settings.midiSaveLocation,
+                                                  programFilePattern);
+    chooser->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                         [this](const juce::FileChooser& fc) {
+                             auto file = fc.getResult();
+                             if (file == juce::File()) return;
+                             auto root = juce::JSON::parse(file);
+                             if (!root["parts"].isArray()) {
+                                 state.setStatus("Not a program setup: " + file.getFileName(), 3000);
+                                 return;
+                             }
+                             const int missing = state.programs.fromVar(root);
+                             // Like every other edit here, the loaded setup goes straight to the unit.
+                             state.lastEditedName = "Programs";
+                             state.lastEditedValue = file.getFileNameWithoutExtension();
+                             state.parameterEdited({ "Programs", [this] { return state.programs.allMessages(); } });
+                             state.setStatus(missing ? "Loaded, " + juce::String(missing) + " unknown sound(s) set Off"
+                                                     : "Loaded " + file.getFileName(), 3000);
+                         });
 }
 
 // ---- Painting and layout --------------------------------------------------------
@@ -214,7 +279,7 @@ void MainComponent::resized()
     juce::String lastGroup;
     for (auto& e : entries) {
         if (e.group != lastGroup) { lastGroup = e.group; ++row; col = 0; }
-        e.button->setBounds(left + col * keyW, keyBlock.getY() + row * 50, keyW, 42);
+        e.button->setBounds(left + col * keyW, keyBlock.getY() + row * keyRowPitch, keyW, keyHeight);
         ++col;
     }
     if (page) page->setBounds(pageArea);
@@ -224,6 +289,7 @@ void MainComponent::writeScreenshots(const juce::File& dir, float scale)
 {
     dir.createDirectory();
     for (size_t i = 0; i < entries.size(); ++i) {
+        if (!entries[i].make) continue;
         showPage(int(i));
         auto image = createComponentSnapshot(getLocalBounds(), true, scale);
         auto file = dir.getChildFile(entries[i].key.replaceCharacter(' ', '_').toLowerCase() + ".png");

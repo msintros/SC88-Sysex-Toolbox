@@ -19,6 +19,7 @@ juce_add_binary_data(SC88SysexToolboxData SOURCES
     ${SC88_DATA_ROOT}/efx.json
     ${SC88_DATA_ROOT}/data/parameter_pages.json
     ${SC88_DATA_ROOT}/data/part_params.json
+    ${SC88_DATA_ROOT}/data/programs.json
     resources/fonts/Inter-Medium.ttf
     resources/fonts/Inter-SemiBold.ttf)
 
@@ -28,12 +29,14 @@ target_sources(SC88SysexToolbox PRIVATE
     source/MidiService.cpp
     source/Exporter.cpp
     source/Settings.cpp
+    source/Programs.cpp
     source/MainComponent.cpp
     source/ui/Theme.cpp
     source/ui/Lcd.cpp
     source/ui/Controls.cpp
     source/ui/ValueCell.cpp
-    source/pages/Pages.cpp)
+    source/pages/Pages.cpp
+    source/pages/ProgramsPage.cpp)
 
 target_include_directories(SC88SysexToolbox PRIVATE source)
 

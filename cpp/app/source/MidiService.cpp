@@ -4,6 +4,9 @@ namespace sc88 {
 
 juce::MidiMessage toMidiMessage(const Bytes& message)
 {
+    // Channel messages (Bank Select, Program Change) go out as they are.
+    if (!message.empty() && message.front() != 0xf0)
+        return juce::MidiMessage(message.data(), int(message.size()));
     auto payload = withoutFraming(message);
     return juce::MidiMessage::createSysExMessage(payload.data(), int(payload.size()));
 }

@@ -405,7 +405,7 @@ public:
         Page::paint(g);
         auto body = bodyArea().withTrimmedTop(70);
         Draw::label(g, body.removeFromTop(20).toFloat(),
-                    "Sends a reset to the SC-88 Pro and returns every page here to the values the unit resets to.",
+                    "Sends a reset to the SC-88 Pro and returns every page here (Programs too) to the values the unit resets to.",
                     juce::Justification::centred, 12.0f);
     }
 
@@ -429,6 +429,7 @@ private:
         auto chosen = pageMessages();
         // Mirror what the SC-88 Pro does on receiving the reset.
         state.patch.reset(gsReset ? ResetKind::GsReset : ResetKind::GmSystemOn);
+        state.programs.reset();
         state.parameterEdited({ exportLabel(), [chosen] { return chosen; } });
         state.setStatus("Sent " + exportLabel() + ", editor reset");
     }

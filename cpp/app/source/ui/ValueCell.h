@@ -35,6 +35,8 @@ public:
     std::function<void()> onChanged;
     bool isSelector() const { return !binding.messages; }
     const CellBinding& getBinding() const { return binding; }
+    // Shrink the value's dots if needed so this many characters always fit.
+    void setMinimumCharacters(int chars) { minimumCharacters = chars; resized(); }
 
     void paint(juce::Graphics&) override;
     void resized() override;
@@ -49,6 +51,7 @@ private:
     Lcd value;
     ArrowPair arrows;
     bool dragStarted = false;
+    int minimumCharacters = 0;
 
     juce::Rectangle<int> labelArea() const;
 };

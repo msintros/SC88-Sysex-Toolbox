@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "MidiService.h"
+#include "Programs.h"
 #include "Settings.h"
 #include "sc88/Patch.h"
 
@@ -26,6 +27,8 @@ public:
     Patch patch;
     Settings settings;
     MidiService midi;
+    ProgramList programList;
+    ProgramSetup programs { programList }; // Programs page: sound on each part
 
     // Send one edited parameter right away and remember it for PARAM MIDI.
     void parameterEdited(const Exportable& parameter);

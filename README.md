@@ -24,3 +24,4 @@ Sysex strings can be sent directly to the hardware unit or to TUS 88Emu.
 
 Sysex can also be dragged and dropped directly into your DAW to use as real-time changes in a MIDI arrangement.  
 
+Now also features program change and save/loadable configurations of all 16 parts.  
